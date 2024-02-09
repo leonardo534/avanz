@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
-  FlatList, TextInput, TouchableOpacity, View,
+  FlatList, View,
 } from 'react-native';
 import { Post } from './interfaces/post';
 import { styles } from './styles/styles';

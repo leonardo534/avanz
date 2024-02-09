@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { styles } from "../../../styles/styles";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from "axios";
 import { modalStyle } from '../../../styles/modalStyle';
-import { Post } from '../../../interfaces/post';
 
 export const InsertPost = () => {
   const [idAuthor, setIdAuthor] = useState('');
@@ -12,7 +10,6 @@ export const InsertPost = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [typeMachine, setTypeMachine] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const [warning, setWarning] = useState(false);
   const [messageResponse, setMessageResponse] = useState(false);
 
@@ -23,7 +20,7 @@ export const InsertPost = () => {
     }
     setWarning(false)
     try {
-      const response = await axios.post('http://192.168.100.29/api/insert.php', {
+      const response = await axios.post('http://localhost/api/insert.php', {
         idAuthor,
         type,
         title,
@@ -31,9 +28,7 @@ export const InsertPost = () => {
         typeMachine
       });
 
-      // Verifica se o post foi inserido com sucesso
       if (response.data.status === 'success') {
-        // Se necessário, atualize a UI ou exiba uma mensagem de sucesso
         console.log('Post inserido com sucesso!');
         setMessageResponse(true)
         setIdAuthor('');
