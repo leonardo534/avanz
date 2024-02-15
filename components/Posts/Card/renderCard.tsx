@@ -14,7 +14,7 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
 
   const handleLike = async (id: number) => {
     try {
-      const response = await axios.post(`http://localhost/api/${isLiked ? 'deslike' : 'like'}Comment.php`, {
+      const response = await axios.post(`http://192.168.100.29/api/${isLiked ? 'deslike' : 'like'}Comment.php`, {
         comment_id: id
       });
       setLikesCount(response.data.likes_count);
@@ -27,7 +27,7 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
   const handleSendComment = async (user_origin_id: number, content_id: number, comment: string) => {
     if(comment == '' || comment.length == 0) return;
     try {
-      const response = await axios.post(`http://localhost/api/insertComment.php`, {
+      const response = await axios.post(`http://192.168.100.29/api/insertComment.php`, {
         user_origin_id: user_origin_id,
         content_id: content_id,
         comment: comment,
@@ -46,6 +46,7 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
     }
   };
   const [modalVisible, setModalVisible] = useState(false);
+  
   const [comment, setComment] = useState('');
 
   return (
@@ -73,6 +74,7 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
           <Text style={styles.messageComment}>{textMessage}</Text>
         )}
       </View>
+
       <Modal
         animationType="fade"
         transparent={true}

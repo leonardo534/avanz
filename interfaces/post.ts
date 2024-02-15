@@ -1,10 +1,11 @@
 export interface Post {
   id: number;
+  idAuthor: number | string;
   type: string;
   title: string;
   description: string;
   typeMachine: string;
-  comments: any[]; // Ou adicione a tipagem adequada para os comentários se disponível
+  comments: any[]; 
 }
 
 export interface Comment {
