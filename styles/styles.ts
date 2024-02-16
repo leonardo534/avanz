@@ -1,9 +1,17 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+const ScreenHeight = Dimensions.get('window').height;
 
 export const styles = StyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#f0f0f0',
+  },
+  sppiner: {
+    width: 'auto',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: ScreenHeight
   },
   card: {
     backgroundColor: '#fff',
@@ -83,6 +91,10 @@ export const styles = StyleSheet.create({
     right: 0,
     padding: 20,
     zIndex: 1,
+  },
+  iconButtonPlus: {
+    flexDirection: 'row', 
+    justifyContent: 'flex-end',
   },
   commentText: {
     fontSize: 16,
