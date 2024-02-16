@@ -78,6 +78,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row', 
     gap: 15,
   },
+  iconButtonTrash: {
+    position: 'absolute',
+    right: 0,
+    padding: 20,
+    zIndex: 1,
+  },
   commentText: {
     fontSize: 16,
     marginBottom: 5,

@@ -1,17 +1,22 @@
-import { Post } from "../../../interfaces/post";
-import { View, Text, TouchableOpacity, TextInput, Modal, ScrollView } from 'react-native';
-import { styles } from "../../../styles/styles";
-import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { useState } from "react";
+import { View, Text, TouchableOpacity, TextInput, Modal, ScrollView, Alert, ToastAndroid } from 'react-native';
+import { useQuery } from "react-query";
+import { deletePost } from "../../../services/deletePost";
+import { styles } from "../../../styles/styles";
 import { modalStyle } from "../../../styles/modalStyle";
 import axios from "axios";
+import { Post } from "../../../interfaces/post";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import getAllPostData from "../../../db/get";
 
 export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [likesCount, setLikesCount] = useState();
-  const [messageComment, setMessageComment] = useState(true);
+  const [messageComment, setMessageComment] = useState(false);
   const [textMessage, setTextMessageComment] = useState('');
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [comment, setComment] = useState('');
+  const { refetch } = useQuery('postsData', getAllPostData);
   const handleLike = async (id: number) => {
     try {
       const response = await axios.post(`http://192.168.100.29/api/${isLiked ? 'deslike' : 'like'}Comment.php`, {
@@ -24,8 +29,35 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
     }
   };
 
+  const showToast = (text: string) => {
+    ToastAndroid.show(text, ToastAndroid.SHORT);
+  };
+
+  const handleDeletePost = async (id: number) => {
+    Alert.alert('Deseja continuar com a exclusão?', 'Após excluido não será possivel recuperar', [
+      {
+        text: 'Cancelar',
+        style: 'cancel',
+      },
+      {
+        text: 'OK', onPress: async () => {
+          const response = await deletePost(id)
+          if (response.success) {
+            showToast('Apagado com sucesso!')
+            refetch();
+            return;
+          }
+          showToast('Error tente novamente!')
+        }
+      },
+    ],
+      {
+        cancelable: true,
+      });
+  }
+
   const handleSendComment = async (user_origin_id: number, content_id: number, comment: string) => {
-    if(comment == '' || comment.length == 0) return;
+    if (comment == '' || comment.length == 0) return;
     try {
       const response = await axios.post(`http://192.168.100.29/api/insertComment.php`, {
         user_origin_id: user_origin_id,
@@ -45,12 +77,13 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
       console.error('Erro ao inserir o comentário:', error);
     }
   };
-  const [modalVisible, setModalVisible] = useState(false);
   
-  const [comment, setComment] = useState('');
 
   return (
     <View style={styles.card}>
+      <TouchableOpacity onPress={() => handleDeletePost(item.id)} style={styles.iconButtonTrash}>
+        <Icon name="trash" size={24} color="black" />
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.description}>{item.description}</Text>
@@ -69,11 +102,11 @@ export const RenderCard: React.FC<{ item: Post }> = ({ item }) => {
           <Icon name="send" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <View>
-        {messageComment && (
+      {messageComment && (
+        <View>
           <Text style={styles.messageComment}>{textMessage}</Text>
-        )}
-      </View>
+        </View>
+      )}
 
       <Modal
         animationType="fade"
